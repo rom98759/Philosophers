@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:52:20 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/12 10:53:08 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:06:29 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	is_digit(char *s)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] < '0' || s[i] > '9')
+		if ((s[i] < '0' || s[i] > '9') && (s[i] != ' ' && s[i] != '\t'))
 			return (0);
 		i++;
 	}
@@ -57,8 +57,6 @@ int	ft_parsing(int nb, char **av)
 			ft_error();
 			return (0);
 		}
-		else
-			printf("%s\n", av[i]);
 		i++;
 	}
 	return (1);
