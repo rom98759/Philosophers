@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:52:20 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/12 08:51:23 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/12 10:53:08 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ int	ft_parsing(int nb, char **av)
 	while (i < nb)
 	{
 		if (check_args(av[i]))
+		{
 			ft_error();
+			return (0);
+		}
 		else
 			printf("%s\n", av[i]);
 		i++;

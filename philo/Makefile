@@ -1,6 +1,6 @@
 # Options de compilation
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g
+CFLAGS := -Wall -Wextra -Werror -pthread -g
 INCLUDES := -Iincludes
 NAME := philo
 
