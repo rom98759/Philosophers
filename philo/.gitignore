@@ -1,0 +1,5 @@
+# Exe
+philo
+objs/
+*.o
+.vscode/
