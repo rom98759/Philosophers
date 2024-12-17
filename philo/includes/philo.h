@@ -45,14 +45,29 @@ typedef struct s_program
 	unsigned long	start_time;
 }					t_program;
 
-/* Function Prototypes */
-int		ft_parsing(int nb, char **av);
-int		init_program(t_program *program, int ac, char **av);
-void	*philo_routine(void *arg);
-void	*game_master(void *arg);
+/* Philosophers */
+void	end_simulation(t_program *program);
+
+/* Threads utils */
+int		is_simulation_over(t_program *program);
+void	print_action(t_philo *philo, char *action);
+void	take_forks(t_philo *philo);
+void	update_philo_state(t_philo *philo);
+
+/* Utils */
 int		ft_atoi(const char *str);
-void	ft_error(void);
 long	get_current_time(void);
 void	ft_usleep(size_t milliseconds);
+void	ft_error(void);
+
+/* Parsing */
+int		ft_parsing(int ac, char **av);
+
+/* Threads */
+void	*philo_routine(void *arg);
+void	*game_master(void *arg);
+
+/* Init */
+int		init_program(t_program *program, int ac, char **av);
 
 #endif

@@ -6,8 +6,11 @@ NAME := philo
 
 SRCS := srcs/philosophers.c \
 	srcs/utils.c \
-	srcs/ft_atoi.c \
-	srcs/parsing/parsing.c \
+	srcs/parsing.c \
+	srcs/inits.c \
+	srcs/threads_utils.c \
+	srcs/philo_threads.c \
+	srcs/game_master.c \
 
 OBJ_DIR := objs/
 OBJ := $(SRCS:srcs/%.c=$(OBJ_DIR)/%.o)
