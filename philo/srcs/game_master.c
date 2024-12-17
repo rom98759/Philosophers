@@ -64,11 +64,14 @@ void	*game_master(void *arg)
 		if (check_all_philos_full(program))
 		{
 			pthread_mutex_lock(&program->write_lock);
+			pthread_mutex_lock(&program->dead_lock);
+			program->dead_flag = 1;
 			printf("All philosophers have eaten the maximum number of meals\n");
+			pthread_mutex_unlock(&program->dead_lock);
 			pthread_mutex_unlock(&program->write_lock);
 			break ;
 		}
-		usleep(500);
+		usleep(50);
 	}
 	return (NULL);
 }

@@ -24,13 +24,18 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->program->nb_philos == 1)
-		return (handle_single_philo(philo), NULL);
+	{
+		handle_single_philo(philo);
+		return (NULL);
+	}
 	if (philo->id % 2 == 0)
 		usleep(2);
 	while (!is_simulation_over(philo->program))
 	{
 		take_forks(philo);
 		update_philo_state(philo);
+		if (is_simulation_over(philo->program))
+			break;
 		print_action(philo, "is sleeping");
 		ft_usleep(philo->program->time_to_sleep);
 		print_action(philo, "is thinking");

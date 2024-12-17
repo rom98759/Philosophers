@@ -46,7 +46,7 @@ int	main(int ac, char **av)
 		pthread_create(&program.philos[i].thread, NULL,
 			philo_routine, &program.philos[i]);
 		if (program.nb_philos > 1)
-			usleep(1);
+			usleep(20);
 	}
 	pthread_create(&master, NULL, game_master, &program);
 	pthread_join(master, NULL);
