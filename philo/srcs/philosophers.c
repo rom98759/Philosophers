@@ -88,7 +88,7 @@ void	*philo_routine(void *arg)
 		return (NULL);
 	}
 	if (philo->id % 2 == 0) // Philosophe pair
-		usleep(5); // Décalage pour éviter que tout le monde prenne les fourchettes en même temps
+		usleep(50); // Décalage pour éviter que tout le monde prenne les fourchettes en même temps
 	while (!is_simulation_over(philo->program))
 	{
 		// Prise des fourchettes
