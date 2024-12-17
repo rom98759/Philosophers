@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:05 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 13:00:59 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:08:00 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ void	init_philo(t_program *program)
 {
 	int	i;
 
+	i = -1;
+	while (++i < program->nb_philos)
+		pthread_mutex_init(&program->forks[i], NULL);
 	i = -1;
 	while (++i < program->nb_philos)
 	{
@@ -30,8 +33,6 @@ void	init_philo(t_program *program)
 
 int	init_program(t_program *program, int ac, char **av)
 {
-	int	i;
-
 	program->nb_philos = atoi(av[1]);
 	program->time_to_die = atoi(av[2]);
 	program->time_to_eat = atoi(av[3]);
@@ -51,11 +52,18 @@ int	init_program(t_program *program, int ac, char **av)
 		return (ft_error(), 1);
 	pthread_mutex_init(&program->write_lock, NULL);
 	pthread_mutex_init(&program->dead_lock, NULL);
-	i = -1;
-	while (++i < program->nb_philos)
-		pthread_mutex_init(&program->forks[i], NULL);
 	init_philo(program);
 	return (0);
+}
+
+int	is_simulation_over(t_program *program)
+{
+	int	result;
+
+	pthread_mutex_lock(&program->dead_lock);
+	result = program->dead_flag;
+	pthread_mutex_unlock(&program->dead_lock);
+	return (result);
 }
 
 void	*philo_routine(void *arg)
@@ -63,27 +71,27 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (1)
+	while (!is_simulation_over(philo->program)) // Vérification constante
 	{
-		pthread_mutex_lock(&philo->program->dead_lock);
-		if (philo->program->dead_flag)
-		{
-			pthread_mutex_unlock(&philo->program->dead_lock);
+		if (is_simulation_over(philo->program)) // Sortir si la simulation est terminée
 			break ;
-		}
-		pthread_mutex_unlock(&philo->program->dead_lock);
 
 		pthread_mutex_lock(philo->r_fork);
+		if (is_simulation_over(philo->program)) // Sortir si la simulation est terminée
+			return (pthread_mutex_unlock(philo->r_fork), NULL);
 		pthread_mutex_lock(&philo->program->write_lock);
 		printf("%zu %d has taken a fork\n", get_current_time() - philo->program->start_time, philo->id);
 		pthread_mutex_unlock(&philo->program->write_lock);
 
 		pthread_mutex_lock(philo->l_fork);
+		if (is_simulation_over(philo->program)) // Sortir si la simulation est terminée
+			return (pthread_mutex_unlock(philo->r_fork), pthread_mutex_unlock(philo->l_fork), NULL);
 		pthread_mutex_lock(&philo->program->write_lock);
 		printf("%zu %d has taken a fork\n", get_current_time() - philo->program->start_time, philo->id);
 		printf("%zu %d is eating\n", get_current_time() - philo->program->start_time, philo->id);
 		pthread_mutex_unlock(&philo->program->write_lock);
 
+		// Mise à jour de `last_meal`
 		pthread_mutex_lock(&philo->program->dead_lock);
 		philo->last_meal = get_current_time();
 		pthread_mutex_unlock(&philo->program->dead_lock);
@@ -106,6 +114,7 @@ void	*philo_routine(void *arg)
 	return (NULL);
 }
 
+
 void	*game_master(void *arg)
 {
 	t_program	*program;
@@ -122,10 +131,13 @@ void	*game_master(void *arg)
 			pthread_mutex_lock(&program->dead_lock);
 			if ((get_current_time() - program->philos[i].last_meal) > (size_t)program->time_to_die)
 			{
-				pthread_mutex_lock(&program->write_lock);
-				printf("%zu %d died\n", get_current_time() - program->start_time, program->philos[i].id);
-				program->dead_flag = 1;
-				pthread_mutex_unlock(&program->write_lock);
+				if (!program->dead_flag)
+				{
+					program->dead_flag = 1;
+					pthread_mutex_lock(&program->write_lock);
+					printf("%zu %d died\n", get_current_time() - program->start_time, program->philos[i].id);
+					pthread_mutex_unlock(&program->write_lock);
+				}
 				pthread_mutex_unlock(&program->dead_lock);
 				return (NULL);
 			}
@@ -134,17 +146,21 @@ void	*game_master(void *arg)
 			pthread_mutex_unlock(&program->dead_lock);
 			i++;
 		}
+
 		if (all_ate)
 		{
 			pthread_mutex_lock(&program->write_lock);
 			printf("All philosophers have eaten the maximum number of meals\n");
 			pthread_mutex_unlock(&program->write_lock);
+			program->dead_flag = 1;
 			return (NULL);
 		}
+
 		usleep(500);
 	}
 	return (NULL);
 }
+
 
 int	main(int ac, char **av)
 {
