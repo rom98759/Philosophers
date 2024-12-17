@@ -5,8 +5,8 @@ INCLUDES := -Iincludes
 NAME := philo
 
 SRCS := srcs/philosophers.c \
-	srcs/ft_atol.c \
-	srcs/errors.c \
+	srcs/utils.c \
+	srcs/ft_atoi.c \
 	srcs/parsing/parsing.c \
 
 OBJ_DIR := objs/

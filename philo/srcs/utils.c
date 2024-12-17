@@ -1,38 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atol.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 13:56:55 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/10 13:56:58 by rcaillie         ###   ########.fr       */
+/*   Created: 2024/12/10 14:04:36 by rcaillie          #+#    #+#             */
+/*   Updated: 2024/12/17 12:03:55 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	ft_atol(const char *str)
+size_t	get_current_time(void)
 {
-	long	res;
-	int		sign;
-	int		i;
+	struct timeval	time;
 
-	res = 0;
-	i = 0;
-	sign = 1;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
+	if (gettimeofday(&time, NULL) == -1)
 	{
-		if (str[i] == '-')
-			sign *= -1;
-		i++;
+		write(2, "gettimeofday() error\n", 22);
+		return (0);
 	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		res = res * 10 + (str[i] - '0');
-		i++;
-	}
-	return (res * sign);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+void	ft_usleep(size_t milliseconds)
+{
+	size_t	start;
+
+	start = get_current_time();
+	while ((get_current_time() - start) < milliseconds)
+		usleep(500);
+}
+
+void	ft_error(void)
+{
+	write(2, "Error\n", 6);
 }
