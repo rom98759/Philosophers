@@ -23,13 +23,14 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	// printf("philo \33[32m%d\33[0m\n", philo->id);
 	if (philo->program->nb_philos == 1)
 	{
 		handle_single_philo(philo);
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		usleep(2);
+		usleep(400);
 	while (!is_simulation_over(philo->program))
 	{
 		take_forks(philo);

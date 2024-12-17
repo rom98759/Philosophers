@@ -71,7 +71,7 @@ void	*game_master(void *arg)
 			pthread_mutex_unlock(&program->write_lock);
 			break ;
 		}
-		usleep(50);
+		usleep(200);
 	}
 	return (NULL);
 }
