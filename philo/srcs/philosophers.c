@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:05 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 14:08:00 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:36:32 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,10 @@ int	main(int ac, char **av)
 		return (1);
 	i = -1;
 	while (++i < program.nb_philos)
+	{
 		pthread_create(&program.philos[i].thread, NULL, philo_routine, &program.philos[i]);
+		usleep(100);
+	}
 	pthread_create(&master, NULL, game_master, &program);
 	pthread_join(master, NULL);
 	i = -1;
