@@ -12,18 +12,16 @@
 
 #include "philo.h"
 
-size_t	get_current_time(void)
+long	get_current_time(void)
 {
 	struct timeval	time;
-	size_t			ret;
 
 	if (gettimeofday(&time, NULL) == -1)
 	{
 		write(2, "gettimeofday() error\n", 22);
 		return (0);
 	}
-	ret = (time.tv_usec / 1000) + (time.tv_sec * 1000);
-	return (ret);
+	return ((time.tv_usec / 1000) + (time.tv_sec * 1000));
 }
 
 void	ft_usleep(size_t milliseconds)

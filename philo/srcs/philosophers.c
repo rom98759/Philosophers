@@ -66,54 +66,66 @@ int	is_simulation_over(t_program *program)
 	return (result);
 }
 
+void	print_action(t_philo *philo, char *action)
+{
+	pthread_mutex_lock(&philo->program->write_lock);
+	if (!is_simulation_over(philo->program))
+		printf("%zu %d %s\n", get_current_time() - philo->program->start_time, philo->id, action);
+	pthread_mutex_unlock(&philo->program->write_lock);
+}
+
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (!is_simulation_over(philo->program)) // Vérification constante
+	if (philo->program->nb_philos == 1)
 	{
-		if (is_simulation_over(philo->program)) // Sortir si la simulation est terminée
-			break ;
-
-		pthread_mutex_lock(philo->r_fork);
-		if (is_simulation_over(philo->program)) // Sortir si la simulation est terminée
-			return (pthread_mutex_unlock(philo->r_fork), NULL);
+		print_action(philo, "has taken a fork");
+		ft_usleep(philo->program->time_to_die);
 		pthread_mutex_lock(&philo->program->write_lock);
-		printf("%zu %d has taken a fork\n", get_current_time() - philo->program->start_time, philo->id);
 		pthread_mutex_unlock(&philo->program->write_lock);
+		return (NULL);
+	}
+	if (philo->id % 2 == 0) // Philosophe pair
+		usleep(5); // Décalage pour éviter que tout le monde prenne les fourchettes en même temps
+	while (!is_simulation_over(philo->program))
+	{
+		// Prise des fourchettes
+		if (philo->id % 2 == 0)
+		{
+			pthread_mutex_lock(philo->l_fork);
+			print_action(philo, "has taken a fork");
+			pthread_mutex_lock(philo->r_fork);
+		}
+		else
+		{
+			pthread_mutex_lock(philo->r_fork);
+			print_action(philo, "has taken a fork");
+			pthread_mutex_lock(philo->l_fork);
+		}
+		print_action(philo, "is eating");
 
-		pthread_mutex_lock(philo->l_fork);
-		if (is_simulation_over(philo->program)) // Sortir si la simulation est terminée
-			return (pthread_mutex_unlock(philo->r_fork), pthread_mutex_unlock(philo->l_fork), NULL);
-		pthread_mutex_lock(&philo->program->write_lock);
-		printf("%zu %d has taken a fork\n", get_current_time() - philo->program->start_time, philo->id);
-		printf("%zu %d is eating\n", get_current_time() - philo->program->start_time, philo->id);
-		pthread_mutex_unlock(&philo->program->write_lock);
-
-		// Mise à jour de `last_meal`
+		// Mise à jour du temps et des repas
 		pthread_mutex_lock(&philo->program->dead_lock);
 		philo->last_meal = get_current_time();
+		philo->meals_eaten++;
 		pthread_mutex_unlock(&philo->program->dead_lock);
 
 		ft_usleep(philo->program->time_to_eat);
-		philo->meals_eaten++;
 
 		pthread_mutex_unlock(philo->l_fork);
 		pthread_mutex_unlock(philo->r_fork);
 
-		pthread_mutex_lock(&philo->program->write_lock);
-		printf("%zu %d is sleeping\n", get_current_time() - philo->program->start_time, philo->id);
-		pthread_mutex_unlock(&philo->program->write_lock);
+		// Philosophe dort
+		print_action(philo, "is sleeping");
 		ft_usleep(philo->program->time_to_sleep);
 
-		pthread_mutex_lock(&philo->program->write_lock);
-		printf("%zu %d is thinking\n", get_current_time() - philo->program->start_time, philo->id);
-		pthread_mutex_unlock(&philo->program->write_lock);
+		// Philosophe pense
+		print_action(philo, "is thinking");
 	}
 	return (NULL);
 }
-
 
 void	*game_master(void *arg)
 {
@@ -131,31 +143,28 @@ void	*game_master(void *arg)
 			pthread_mutex_lock(&program->dead_lock);
 			if ((get_current_time() - program->philos[i].last_meal) > (size_t)program->time_to_die)
 			{
-				if (!program->dead_flag)
-				{
-					program->dead_flag = 1;
-					pthread_mutex_lock(&program->write_lock);
-					printf("%zu %d died\n", get_current_time() - program->start_time, program->philos[i].id);
-					pthread_mutex_unlock(&program->write_lock);
-				}
+				program->dead_flag = 1;
+				pthread_mutex_lock(&program->write_lock);
+				printf("%zu %d died\n", get_current_time() - program->start_time, program->philos[i].id);
+				pthread_mutex_unlock(&program->write_lock);
 				pthread_mutex_unlock(&program->dead_lock);
 				return (NULL);
 			}
-			if (program->philos[i].meals_eaten < program->max_meals)
+			if (program->philos[i].meals_eaten < program->max_meals || program->max_meals == -1)
 				all_ate = 0;
 			pthread_mutex_unlock(&program->dead_lock);
 			i++;
 		}
-
 		if (all_ate)
 		{
 			pthread_mutex_lock(&program->write_lock);
 			printf("All philosophers have eaten the maximum number of meals\n");
 			pthread_mutex_unlock(&program->write_lock);
+			pthread_mutex_lock(&program->dead_lock);
 			program->dead_flag = 1;
+			pthread_mutex_unlock(&program->dead_lock);
 			return (NULL);
 		}
-
 		usleep(500);
 	}
 	return (NULL);
@@ -178,7 +187,8 @@ int	main(int ac, char **av)
 	while (++i < program.nb_philos)
 	{
 		pthread_create(&program.philos[i].thread, NULL, philo_routine, &program.philos[i]);
-		usleep(100);
+		if (program.nb_philos > 1)
+			usleep(1);
 	}
 	pthread_create(&master, NULL, game_master, &program);
 	pthread_join(master, NULL);

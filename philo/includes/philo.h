@@ -42,7 +42,7 @@ typedef struct s_program
 	pthread_mutex_t dead_lock;
 	pthread_mutex_t *forks;
 	t_philo         *philos;
-	size_t          start_time;
+	unsigned long   start_time;
 }                   t_program;
 
 /* Function Prototypes */
@@ -55,7 +55,7 @@ void	*philo_routine(void *arg);
 void	*game_master(void *arg);
 int		ft_atoi(const char *str);
 void	ft_error(void);
-size_t	get_current_time(void);
+long	get_current_time(void);
 void	ft_usleep(size_t milliseconds);
 
 #endif
