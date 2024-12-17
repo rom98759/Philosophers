@@ -26,34 +26,10 @@ void	init_philo(t_program *program)
 		program->philos[i].meals_eaten = 0;
 		program->philos[i].last_meal = program->start_time;
 		program->philos[i].r_fork = &program->forks[i];
-		program->philos[i].l_fork = &program->forks[(i + 1) % program->nb_philos];
+		program->philos[i].l_fork = &program
+			->forks[(i + 1) % program->nb_philos];
 		program->philos[i].program = program;
 	}
-}
-
-int	init_program(t_program *program, int ac, char **av)
-{
-	program->nb_philos = atoi(av[1]);
-	program->time_to_die = atoi(av[2]);
-	program->time_to_eat = atoi(av[3]);
-	program->time_to_sleep = atoi(av[4]);
-	if (ac == 6)
-	{
-		program->max_meals = atoi(av[5]);
-		printf("max_meals = %d\n", program->max_meals);
-	}
-	else
-		program->max_meals = -1;
-	program->dead_flag = 0;
-	program->start_time = get_current_time();
-	program->forks = malloc(sizeof(pthread_mutex_t) * program->nb_philos);
-	program->philos = malloc(sizeof(t_philo) * program->nb_philos);
-	if (!program->forks || !program->philos)
-		return (ft_error(), 1);
-	pthread_mutex_init(&program->write_lock, NULL);
-	pthread_mutex_init(&program->dead_lock, NULL);
-	init_philo(program);
-	return (0);
 }
 
 int	is_simulation_over(t_program *program)
@@ -70,8 +46,88 @@ void	print_action(t_philo *philo, char *action)
 {
 	pthread_mutex_lock(&philo->program->write_lock);
 	if (!is_simulation_over(philo->program))
-		printf("%zu %d %s\n", get_current_time() - philo->program->start_time, philo->id, action);
+		printf("%zu %d %s\n", get_current_time()
+			- philo->program->start_time, philo->id, action);
 	pthread_mutex_unlock(&philo->program->write_lock);
+}
+
+int	parse_arguments(t_program *program, int ac, char **av)
+{
+	program->nb_philos = atoi(av[1]);
+	program->time_to_die = atoi(av[2]);
+	program->time_to_eat = atoi(av[3]);
+	program->time_to_sleep = atoi(av[4]);
+	if (ac == 6)
+		program->max_meals = atoi(av[5]);
+	else
+		program->max_meals = -1;
+	program->dead_flag = 0;
+	program->start_time = get_current_time();
+	return (0);
+}
+
+int	allocate_resources(t_program *program)
+{
+	program->forks = malloc(sizeof(pthread_mutex_t) * program->nb_philos);
+	program->philos = malloc(sizeof(t_philo) * program->nb_philos);
+	if (!program->forks || !program->philos)
+		return (ft_error(), 1);
+	return (0);
+}
+
+int	init_mutexes(t_program *program)
+{
+	int	i;
+
+	pthread_mutex_init(&program->write_lock, NULL);
+	pthread_mutex_init(&program->dead_lock, NULL);
+	i = -1;
+	while (++i < program->nb_philos)
+		pthread_mutex_init(&program->forks[i], NULL);
+	return (0);
+}
+
+int	init_program(t_program *program, int ac, char **av)
+{
+	if (parse_arguments(program, ac, av) || allocate_resources(program))
+		return (1);
+	init_mutexes(program);
+	init_philo(program);
+	return (0);
+}
+
+void	handle_single_philo(t_philo *philo)
+{
+	print_action(philo, "has taken a fork");
+	ft_usleep(philo->program->time_to_die);
+}
+
+void	take_forks(t_philo *philo)
+{
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_lock(philo->l_fork);
+		print_action(philo, "has taken a fork");
+		pthread_mutex_lock(philo->r_fork);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->r_fork);
+		print_action(philo, "has taken a fork");
+		pthread_mutex_lock(philo->l_fork);
+	}
+}
+
+void	update_philo_state(t_philo *philo)
+{
+	print_action(philo, "is eating");
+	pthread_mutex_lock(&philo->program->dead_lock);
+	philo->last_meal = get_current_time();
+	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->program->dead_lock);
+	ft_usleep(philo->program->time_to_eat);
+	pthread_mutex_unlock(philo->l_fork);
+	pthread_mutex_unlock(philo->r_fork);
 }
 
 void	*philo_routine(void *arg)
@@ -80,96 +136,96 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->program->nb_philos == 1)
-	{
-		print_action(philo, "has taken a fork");
-		ft_usleep(philo->program->time_to_die);
-		pthread_mutex_lock(&philo->program->write_lock);
-		pthread_mutex_unlock(&philo->program->write_lock);
-		return (NULL);
-	}
-	if (philo->id % 2 == 0) // Philosophe pair
-		usleep(50); // Décalage pour éviter que tout le monde prenne les fourchettes en même temps
+		return (handle_single_philo(philo), NULL);
+	if (philo->id % 2 == 0)
+		usleep(50);
 	while (!is_simulation_over(philo->program))
 	{
-		// Prise des fourchettes
-		if (philo->id % 2 == 0)
-		{
-			pthread_mutex_lock(philo->l_fork);
-			print_action(philo, "has taken a fork");
-			pthread_mutex_lock(philo->r_fork);
-		}
-		else
-		{
-			pthread_mutex_lock(philo->r_fork);
-			print_action(philo, "has taken a fork");
-			pthread_mutex_lock(philo->l_fork);
-		}
-		print_action(philo, "is eating");
-
-		// Mise à jour du temps et des repas
-		pthread_mutex_lock(&philo->program->dead_lock);
-		philo->last_meal = get_current_time();
-		philo->meals_eaten++;
-		pthread_mutex_unlock(&philo->program->dead_lock);
-
-		ft_usleep(philo->program->time_to_eat);
-
-		pthread_mutex_unlock(philo->l_fork);
-		pthread_mutex_unlock(philo->r_fork);
-
-		// Philosophe dort
+		take_forks(philo);
+		update_philo_state(philo);
 		print_action(philo, "is sleeping");
 		ft_usleep(philo->program->time_to_sleep);
-
-		// Philosophe pense
 		print_action(philo, "is thinking");
 	}
 	return (NULL);
+}
+
+int	check_philo_death(t_program *program, int i)
+{
+	pthread_mutex_lock(&program->dead_lock);
+	if ((get_current_time() - program->philos[i].last_meal)
+		> (size_t)program->time_to_die)
+	{
+		program->dead_flag = 1;
+		pthread_mutex_lock(&program->write_lock);
+		printf("%zu %d died\n", get_current_time() - program->start_time,
+			program->philos[i].id);
+		pthread_mutex_unlock(&program->write_lock);
+		pthread_mutex_unlock(&program->dead_lock);
+		return (1);
+	}
+	pthread_mutex_unlock(&program->dead_lock);
+	return (0);
+}
+
+int	check_all_philos_full(t_program *program)
+{
+	int	i;
+	int	all_ate;
+
+	i = 0;
+	all_ate = 1;
+	while (i < program->nb_philos)
+	{
+		pthread_mutex_lock(&program->dead_lock);
+		if (program->philos[i].meals_eaten < program->max_meals
+			|| program->max_meals == -1)
+			all_ate = 0;
+		pthread_mutex_unlock(&program->dead_lock);
+		i++;
+	}
+	return (all_ate);
 }
 
 void	*game_master(void *arg)
 {
 	t_program	*program;
 	int			i;
-	int			all_ate;
 
 	program = (t_program *)arg;
 	while (1)
 	{
-		i = 0;
-		all_ate = 1;
-		while (i < program->nb_philos)
-		{
-			pthread_mutex_lock(&program->dead_lock);
-			if ((get_current_time() - program->philos[i].last_meal) > (size_t)program->time_to_die)
-			{
-				program->dead_flag = 1;
-				pthread_mutex_lock(&program->write_lock);
-				printf("%zu %d died\n", get_current_time() - program->start_time, program->philos[i].id);
-				pthread_mutex_unlock(&program->write_lock);
-				pthread_mutex_unlock(&program->dead_lock);
+		i = -1;
+		while (++i < program->nb_philos)
+			if (check_philo_death(program, i))
 				return (NULL);
-			}
-			if (program->philos[i].meals_eaten < program->max_meals || program->max_meals == -1)
-				all_ate = 0;
-			pthread_mutex_unlock(&program->dead_lock);
-			i++;
-		}
-		if (all_ate)
+		if (check_all_philos_full(program))
 		{
 			pthread_mutex_lock(&program->write_lock);
 			printf("All philosophers have eaten the maximum number of meals\n");
 			pthread_mutex_unlock(&program->write_lock);
-			pthread_mutex_lock(&program->dead_lock);
-			program->dead_flag = 1;
-			pthread_mutex_unlock(&program->dead_lock);
-			return (NULL);
+			break ;
 		}
 		usleep(500);
 	}
 	return (NULL);
 }
 
+void	end_simulation(t_program *program)
+{
+	int	i;
+
+	i = -1;
+	while (++i < program->nb_philos)
+	{
+		pthread_mutex_unlock(&program->forks[i]);
+		pthread_mutex_destroy(&program->forks[i]);
+	}
+	pthread_mutex_destroy(&program->write_lock);
+	pthread_mutex_destroy(&program->dead_lock);
+	free(program->forks);
+	free(program->philos);
+}
 
 int	main(int ac, char **av)
 {
@@ -186,7 +242,8 @@ int	main(int ac, char **av)
 	i = -1;
 	while (++i < program.nb_philos)
 	{
-		pthread_create(&program.philos[i].thread, NULL, philo_routine, &program.philos[i]);
+		pthread_create(&program.philos[i].thread, NULL,
+			philo_routine, &program.philos[i]);
 		if (program.nb_philos > 1)
 			usleep(1);
 	}
@@ -195,7 +252,6 @@ int	main(int ac, char **av)
 	i = -1;
 	while (++i < program.nb_philos)
 		pthread_join(program.philos[i].thread, NULL);
-	free(program.forks);
-	free(program.philos);
+	end_simulation(&program);
 	return (0);
 }
