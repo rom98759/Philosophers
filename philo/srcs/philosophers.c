@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:05 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 12:31:01 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:00:59 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,36 +58,98 @@ int	init_program(t_program *program, int ac, char **av)
 	return (0);
 }
 
-void	*routine(void *arg)
+void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while ((philo->program->max_meals != -1 && philo->meals_eaten < philo->program->max_meals) || !philo->program->dead_flag)
+	while (1)
 	{
-		// Printf en rouge
-		// printf("\033[0;31mPhilo %d number of meals eaten: %d\n\033[0m", philo->id, philo->meals_eaten);
+		pthread_mutex_lock(&philo->program->dead_lock);
+		if (philo->program->dead_flag)
+		{
+			pthread_mutex_unlock(&philo->program->dead_lock);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->program->dead_lock);
 
-		printf("%zu %d is thinking\n", get_current_time(), philo->id);
 		pthread_mutex_lock(philo->r_fork);
-		printf("%zu %d has taken a fork\n", get_current_time(), philo->id);
+		pthread_mutex_lock(&philo->program->write_lock);
+		printf("%zu %d has taken a fork\n", get_current_time() - philo->program->start_time, philo->id);
+		pthread_mutex_unlock(&philo->program->write_lock);
+
 		pthread_mutex_lock(philo->l_fork);
-		printf("%zu %d is eating\n", get_current_time(), philo->id);
-		ft_usleep(philo->program->time_to_eat);
+		pthread_mutex_lock(&philo->program->write_lock);
+		printf("%zu %d has taken a fork\n", get_current_time() - philo->program->start_time, philo->id);
+		printf("%zu %d is eating\n", get_current_time() - philo->program->start_time, philo->id);
+		pthread_mutex_unlock(&philo->program->write_lock);
+
+		pthread_mutex_lock(&philo->program->dead_lock);
 		philo->last_meal = get_current_time();
+		pthread_mutex_unlock(&philo->program->dead_lock);
+
+		ft_usleep(philo->program->time_to_eat);
 		philo->meals_eaten++;
+
 		pthread_mutex_unlock(philo->l_fork);
 		pthread_mutex_unlock(philo->r_fork);
-		printf("%zu %d is sleeping\n", get_current_time(), philo->id);
+
+		pthread_mutex_lock(&philo->program->write_lock);
+		printf("%zu %d is sleeping\n", get_current_time() - philo->program->start_time, philo->id);
+		pthread_mutex_unlock(&philo->program->write_lock);
 		ft_usleep(philo->program->time_to_sleep);
+
+		pthread_mutex_lock(&philo->program->write_lock);
+		printf("%zu %d is thinking\n", get_current_time() - philo->program->start_time, philo->id);
+		pthread_mutex_unlock(&philo->program->write_lock);
 	}
-	printf("\033[0;32m%zu %d is dead\n\033[0m", get_current_time(), philo->id);
+	return (NULL);
+}
+
+void	*game_master(void *arg)
+{
+	t_program	*program;
+	int			i;
+	int			all_ate;
+
+	program = (t_program *)arg;
+	while (1)
+	{
+		i = 0;
+		all_ate = 1;
+		while (i < program->nb_philos)
+		{
+			pthread_mutex_lock(&program->dead_lock);
+			if ((get_current_time() - program->philos[i].last_meal) > (size_t)program->time_to_die)
+			{
+				pthread_mutex_lock(&program->write_lock);
+				printf("%zu %d died\n", get_current_time() - program->start_time, program->philos[i].id);
+				program->dead_flag = 1;
+				pthread_mutex_unlock(&program->write_lock);
+				pthread_mutex_unlock(&program->dead_lock);
+				return (NULL);
+			}
+			if (program->philos[i].meals_eaten < program->max_meals)
+				all_ate = 0;
+			pthread_mutex_unlock(&program->dead_lock);
+			i++;
+		}
+		if (all_ate)
+		{
+			pthread_mutex_lock(&program->write_lock);
+			printf("All philosophers have eaten the maximum number of meals\n");
+			pthread_mutex_unlock(&program->write_lock);
+			return (NULL);
+		}
+		usleep(500);
+	}
 	return (NULL);
 }
 
 int	main(int ac, char **av)
 {
 	t_program	program;
+	pthread_t	master;
 	int			i;
 
 	if (!(ac == 5 || ac == 6))
@@ -98,7 +160,9 @@ int	main(int ac, char **av)
 		return (1);
 	i = -1;
 	while (++i < program.nb_philos)
-		pthread_create(&program.philos[i].thread, NULL, routine, &program.philos[i]);
+		pthread_create(&program.philos[i].thread, NULL, philo_routine, &program.philos[i]);
+	pthread_create(&master, NULL, game_master, &program);
+	pthread_join(master, NULL);
 	i = -1;
 	while (++i < program.nb_philos)
 		pthread_join(program.philos[i].thread, NULL);
