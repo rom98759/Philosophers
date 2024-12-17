@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:05 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 12:12:32 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:31:01 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ int	init_program(t_program *program, int ac, char **av)
 	program->time_to_eat = atoi(av[3]);
 	program->time_to_sleep = atoi(av[4]);
 	if (ac == 6)
+	{
 		program->max_meals = atoi(av[5]);
+		printf("max_meals = %d\n", program->max_meals);
+	}
 	else
 		program->max_meals = -1;
 	program->dead_flag = 0;
@@ -60,8 +63,11 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (!philo->program->dead_flag || (philo->program->max_meals != -1 && philo->meals_eaten < philo->program->max_meals))
+	while ((philo->program->max_meals != -1 && philo->meals_eaten < philo->program->max_meals) || !philo->program->dead_flag)
 	{
+		// Printf en rouge
+		// printf("\033[0;31mPhilo %d number of meals eaten: %d\n\033[0m", philo->id, philo->meals_eaten);
+
 		printf("%zu %d is thinking\n", get_current_time(), philo->id);
 		pthread_mutex_lock(philo->r_fork);
 		printf("%zu %d has taken a fork\n", get_current_time(), philo->id);
@@ -75,6 +81,7 @@ void	*routine(void *arg)
 		printf("%zu %d is sleeping\n", get_current_time(), philo->id);
 		ft_usleep(philo->program->time_to_sleep);
 	}
+	printf("\033[0;32m%zu %d is dead\n\033[0m", get_current_time(), philo->id);
 	return (NULL);
 }
 
