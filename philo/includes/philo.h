@@ -21,14 +21,14 @@
 
 typedef struct s_philo
 {
-	int				id;
-	int				meals_eaten;
-	size_t			last_meal;
-	pthread_t		thread;
-	struct s_program *program;
-	pthread_mutex_t	*r_fork;
-	pthread_mutex_t	*l_fork;
-}					t_philo;
+	int					id;
+	int					meals_eaten;
+	size_t				last_meal;
+	pthread_t			thread;
+	struct s_program	*program;
+	pthread_mutex_t		*r_fork;
+	pthread_mutex_t		*l_fork;
+}						t_philo;
 
 typedef struct s_program
 {
