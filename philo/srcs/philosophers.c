@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:05 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 14:36:32 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/18 10:23:38 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	end_simulation(t_program *program)
 	i = -1;
 	while (++i < program->nb_philos)
 	{
-		pthread_mutex_unlock(&program->forks[i]);
 		pthread_mutex_destroy(&program->forks[i]);
 	}
 	pthread_mutex_destroy(&program->write_lock);
