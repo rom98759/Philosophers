@@ -56,27 +56,19 @@ re: fclean all
 
 noel:
 	@echo "🎄 Joyeux Noël à tous ! 🎅"
-	@$(MAKE) -s sapin taille=$(taille)
+	@$(MAKE) -s run_sapin taille=$(taille)
 
 # =============================================================================
 # 🎄 RÈGLE POUR DESSINER UN SAPIN 🎄
 # =============================================================================
 
-taille ?= 3
+SCRIPT = test.sh
 
-sapin:
-	@echo "Voici ton sapin de Noël de taille $(taille) :"
-	@for i in $(shell seq 1 $(taille)); do \
-		nb_etoiles=$$(($$i * 2 - 1)); \
-		nb_espaces=$$(($(taille) - $$i)); \
-		printf "%*s" $$nb_espaces ""; \
-		for j in $(shell seq 1 $$nb_etoiles); do \
-			printf "*"; \
-		done; \
-		printf "\n"; \
-	done; \
-	printf "%*s" $$(($(taille) - 1)) ""; \
-	echo "|";
+run_sapin:
+	@chmod +x $(SCRIPT)
+	@./$(SCRIPT) $(taille)
+
+
 
 # =============================================================================
 # 💼 PHONY RULES 💼
