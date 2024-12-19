@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:05:10 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 21:05:10 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/18 10:13:55 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	*game_master(void *arg)
 			pthread_mutex_unlock(&program->write_lock);
 			break ;
 		}
-		usleep(200);
+		usleep(50);
 	}
 	return (NULL);
 }

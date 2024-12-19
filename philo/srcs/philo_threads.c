@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:06:17 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 21:06:17 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:25:27 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	// printf("philo \33[32m%d\33[0m\n", philo->id);
 	if (philo->program->nb_philos == 1)
 	{
 		handle_single_philo(philo);
@@ -36,7 +35,7 @@ void	*philo_routine(void *arg)
 		take_forks(philo);
 		update_philo_state(philo);
 		if (is_simulation_over(philo->program))
-			break;
+			break ;
 		print_action(philo, "is sleeping");
 		ft_usleep(philo->program->time_to_sleep);
 		print_action(philo, "is thinking");
