@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:06:17 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/18 15:25:27 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/20 11:11:16 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	*philo_routine(void *arg)
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		usleep(400);
+		usleep(1);
 	while (!is_simulation_over(philo->program))
 	{
 		take_forks(philo);

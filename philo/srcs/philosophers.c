@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:05 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/18 10:23:38 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/20 11:17:21 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	end_simulation(t_program *program)
 	pthread_mutex_destroy(&program->dead_lock);
 	free(program->forks);
 	free(program->philos);
+	program->forks = NULL;
+	program->philos = NULL;
 }
 
 int	main(int ac, char **av)
@@ -45,7 +47,7 @@ int	main(int ac, char **av)
 		pthread_create(&program.philos[i].thread, NULL,
 			philo_routine, &program.philos[i]);
 		if (program.nb_philos > 1)
-			usleep(400);
+			usleep(100);
 	}
 	pthread_create(&master, NULL, game_master, &program);
 	pthread_join(master, NULL);

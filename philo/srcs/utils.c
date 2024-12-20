@@ -6,15 +6,15 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:04:36 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 12:48:28 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/20 11:18:04 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_atoi(const char *str)
+long	ft_atol(const char *str)
 {
-	int		res;
+	long	res;
 	int		sign;
 	int		i;
 

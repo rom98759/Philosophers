@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:52:20 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 11:50:27 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/20 11:19:59 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	check_arg(const char *s)
 
 	if (!is_digit(s))
 		return (0);
-	n = ft_atoi(s);
+	n = ft_atol(s);
 	if (!is_valid(n))
 		return (0);
 	return (1);

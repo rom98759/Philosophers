@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:58:57 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/17 20:58:57 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/20 11:40:46 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ static void	init_philo(t_program *program)
 
 static int	parse_arguments(t_program *program, int ac, char **av)
 {
-	program->nb_philos = atoi(av[1]);
-	program->time_to_die = atoi(av[2]);
-	program->time_to_eat = atoi(av[3]);
-	program->time_to_sleep = atoi(av[4]);
+	program->nb_philos = ft_atol(av[1]);
+	program->time_to_die = ft_atol(av[2]);
+	program->time_to_eat = ft_atol(av[3]);
+	program->time_to_sleep = ft_atol(av[4]);
 	if (ac == 6)
-		program->max_meals = atoi(av[5]);
+		program->max_meals = ft_atol(av[5]);
 	else
 		program->max_meals = -1;
 	program->dead_flag = 0;
@@ -64,7 +64,16 @@ static int	init_mutexes(t_program *program)
 	pthread_mutex_init(&program->dead_lock, NULL);
 	i = -1;
 	while (++i < program->nb_philos)
-		pthread_mutex_init(&program->forks[i], NULL);
+	{
+		if (pthread_mutex_init(&program->forks[i], NULL) != 0)
+		{
+			while (--i >= 0)
+				pthread_mutex_destroy(&program->forks[i]);
+			pthread_mutex_destroy(&program->write_lock);
+			pthread_mutex_destroy(&program->dead_lock);
+			return (1);
+		}
+	}
 	return (0);
 }
 
