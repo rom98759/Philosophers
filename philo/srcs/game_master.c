@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:05:10 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/20 11:20:42 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:39:09 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@ static int	check_philo_death(t_program *program, int i)
 	size_t	current_time;
 
 	current_time = get_current_time();
-	pthread_mutex_lock(&program->dead_lock);
+	pthread_mutex_lock(&program->write_lock);
 	if ((current_time - program->philos[i].last_meal)
 		> (size_t)program->time_to_die)
 	{
 		program->dead_flag = 1;
-		pthread_mutex_lock(&program->write_lock);
+		pthread_mutex_lock(&program->dead_lock);
 		printf("%zu %d died\n", current_time - program->start_time,
 			program->philos[i].id);
-		pthread_mutex_unlock(&program->write_lock);
 		pthread_mutex_unlock(&program->dead_lock);
+		pthread_mutex_unlock(&program->write_lock);
 		return (1);
 	}
-	pthread_mutex_unlock(&program->dead_lock);
+	pthread_mutex_unlock(&program->write_lock);
 	return (0);
 }
 
@@ -74,7 +74,7 @@ void	*game_master(void *arg)
 			pthread_mutex_unlock(&program->write_lock);
 			break ;
 		}
-		usleep(1);
+		usleep(5);
 	}
 	return (NULL);
 }

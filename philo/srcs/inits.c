@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:58:57 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/20 11:40:46 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:45:03 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@ static void	init_philo(t_program *program)
 {
 	int	i;
 
-	i = -1;
-	while (++i < program->nb_philos)
-		pthread_mutex_init(&program->forks[i], NULL);
 	i = -1;
 	while (++i < program->nb_philos)
 	{

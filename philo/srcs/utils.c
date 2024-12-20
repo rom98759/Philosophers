@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:04:36 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/20 11:18:04 by rcaillie         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:39:21 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ft_usleep(size_t milliseconds)
 
 	start = get_current_time();
 	while ((get_current_time() - start) < milliseconds)
-		usleep(500);
+		usleep(1);
 }
 
 void	ft_error(void)
