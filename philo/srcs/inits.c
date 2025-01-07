@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:58:57 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/20 12:45:03 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/01/07 11:14:13 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ static int	allocate_resources(t_program *program)
 	program->forks = malloc(sizeof(pthread_mutex_t) * program->nb_philos);
 	program->philos = malloc(sizeof(t_philo) * program->nb_philos);
 	if (!program->forks || !program->philos)
-		return (ft_error(), 1);
+	{
+		ft_error();
+		return (1);
+	}
 	return (0);
 }
 
