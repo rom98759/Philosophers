@@ -51,37 +51,7 @@ fclean: clean
 re: fclean all
 
 # =============================================================================
-# 🎅 EASTER EGG RULES 🎄
-# =============================================================================
-
-noel:
-	@$(MAKE) -s run_sapin taille=$(taille)
-	@echo "🎄 Joyeux Noël à tous ! 🎅"
-
-
-# =============================================================================
-# 🎄 RÈGLE POUR DESSINER UN SAPIN 🎄
-# =============================================================================
-
-SCRIPT = test.sh
-SCRIPT_URL = https://raw.githubusercontent.com/rom98759/NOEL/refs/heads/main/test.sh?token=GHSAT0AAAAAACVJT5B2BVP7YK4UEBZAJ4IMZ3EC5TA
-
-run_sapin: download_script
-	@chmod +x $(SCRIPT)
-	@./$(SCRIPT) $(taille)
-
-download_script:
-	@if [ ! -f $(SCRIPT) ]; then \
-		echo "Le fichier n'existe pas, téléchargement en cours..."; \
-		curl -o $(SCRIPT) $(SCRIPT_URL); \
-		clear; \
-	fi
-
-remove_script:
-	@rm -f $(SCRIPT)
-
-# =============================================================================
 # 💼 PHONY RULES 💼
 # =============================================================================
 
-.PHONY: all clean fclean re noel run_sapin download_script remove_script
+.PHONY: all clean fclean re
