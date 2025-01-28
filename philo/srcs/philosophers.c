@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:05 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/01/07 12:52:24 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:07:52 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ int	main(int ac, char **av)
 	int			i;
 
 	if (!(ac == 5 || ac == 6))
-		return (ft_error(), 1);
+	{
+		ft_error();
+		return (1);
+	}
 	if (!ft_parsing(ac, av))
 		return (1);
 	if (init_program(&program, ac, av))
@@ -44,16 +47,21 @@ int	main(int ac, char **av)
 	i = -1;
 	while (++i < program.nb_philos)
 	{
-		pthread_create(&program.philos[i].thread, NULL,
-			philo_routine, &program.philos[i]);
+		if (pthread_create(&program.philos[i].thread, NULL,
+			philo_routine, &program.philos[i]) != 0)
+		{
+			program.dead_flag = 1;
+			break ;
+		}
 		if (program.nb_philos > 1)
 			usleep(3);
 	}
-	pthread_create(&master, NULL, game_master, &program);
-	pthread_join(master, NULL);
+	if (i == program.nb_philos && pthread_create(&master, NULL, game_master, &program) != 0)
+		program.dead_flag = 1;
 	i = -1;
 	while (++i < program.nb_philos)
 		pthread_join(program.philos[i].thread, NULL);
+	pthread_join(master, NULL);
 	end_simulation(&program);
 	return (0);
 }

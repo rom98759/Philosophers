@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:58:57 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/01/07 11:14:13 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:04:55 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,15 @@ static int	parse_arguments(t_program *program, int ac, char **av)
 static int	allocate_resources(t_program *program)
 {
 	program->forks = malloc(sizeof(pthread_mutex_t) * program->nb_philos);
-	program->philos = malloc(sizeof(t_philo) * program->nb_philos);
-	if (!program->forks || !program->philos)
+	if (!program->forks)
 	{
+		ft_error();
+		return (1);
+	}
+	program->philos = malloc(sizeof(t_philo) * program->nb_philos);
+	if (!program->philos)
+	{
+		free(program->forks);
 		ft_error();
 		return (1);
 	}
@@ -81,7 +87,12 @@ int	init_program(t_program *program, int ac, char **av)
 {
 	if (parse_arguments(program, ac, av) || allocate_resources(program))
 		return (1);
-	init_mutexes(program);
+	if (init_mutexes(program))
+	{
+		free(program->philos);
+		free(program->forks);
+		return (1);
+	}
 	init_philo(program);
 	return (0);
 }
