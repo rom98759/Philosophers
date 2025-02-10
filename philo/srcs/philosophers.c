@@ -6,14 +6,14 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:05 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 10:48:31 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:01:27 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
- * End the simulation by destroying mutexes and freeing resources.
+ * End the simulation by destroying mutexes freeing
  */
 static void	end_simulation(t_program *program)
 {
@@ -33,7 +33,7 @@ static void	end_simulation(t_program *program)
 }
 
 /**
- * Create threads for each philosopher.
+ * Create threads philosopher.
  */
 static int	create_philos_threads(t_program *program)
 {
@@ -55,7 +55,7 @@ static int	create_philos_threads(t_program *program)
 }
 
 /**
- * Create the master thread to monitor the simulation.
+ * Create master
  */
 static int	create_master_thread(t_program *program, pthread_t *master)
 {
@@ -68,7 +68,7 @@ static int	create_master_thread(t_program *program, pthread_t *master)
 }
 
 /**
- * Wait for all threads to finish.
+ * Wait for all threads to finish
  */
 static void	wait_threads(t_program *program, pthread_t *master)
 {
@@ -81,7 +81,7 @@ static void	wait_threads(t_program *program, pthread_t *master)
 }
 
 /**
- * Main function to start the simulation.
+ * Main function
  */
 int	main(int ac, char **av)
 {

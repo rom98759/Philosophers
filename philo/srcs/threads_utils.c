@@ -6,14 +6,14 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:07:04 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 13:56:24 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:21:57 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
- * Check if the simulation is over.
+ * Check if the simulation is over
  */
 int	is_simulation_over(t_program *program)
 {
@@ -26,7 +26,7 @@ int	is_simulation_over(t_program *program)
 }
 
 /**
- * Print an action performed by a philosopher.
+ * Print an action
  */
 void	print_action(t_philo *philo, char *action)
 {
@@ -40,7 +40,7 @@ void	print_action(t_philo *philo, char *action)
 }
 
 /**
- * Philosopher takes forks.
+ * Philosopher takes forks
  */
 void	take_forks(t_philo *philo)
 {
@@ -59,7 +59,7 @@ void	take_forks(t_philo *philo)
 }
 
 /**
- * Update the state of a philosopher.
+ * Update the state of a philosopher
  */
 void	update_philo_state(t_philo *philo)
 {
@@ -68,7 +68,15 @@ void	update_philo_state(t_philo *philo)
 	philo->last_meal = get_current_time();
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->program->write_lock);
-	ft_usleep(philo->program->time_to_eat);
-	pthread_mutex_unlock(philo->l_fork);
-	pthread_mutex_unlock(philo->r_fork);
+	ft_usleep(philo->program->time_to_eat, philo);
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_unlock(philo->r_fork);
+		pthread_mutex_unlock(philo->l_fork);
+	}
+	else
+	{
+		pthread_mutex_unlock(philo->l_fork);
+		pthread_mutex_unlock(philo->r_fork);
+	}
 }

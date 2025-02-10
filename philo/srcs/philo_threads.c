@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:06:17 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 13:56:24 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:04:21 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 static void	handle_single_philo(t_philo *philo)
 {
 	print_action(philo, "has taken a fork");
-	ft_usleep(philo->program->time_to_die);
+	ft_usleep(philo->program->time_to_die, philo);
 }
 
 /**
@@ -43,7 +43,7 @@ void	*philo_routine(void *arg)
 		if (is_simulation_over(philo->program))
 			break ;
 		print_action(philo, "is sleeping");
-		ft_usleep(philo->program->time_to_sleep);
+		ft_usleep(philo->program->time_to_sleep, philo);
 		print_action(philo, "is thinking");
 	}
 	return (NULL);

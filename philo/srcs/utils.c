@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:04:36 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 13:56:24 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:18:18 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,17 @@ long	get_current_time(void)
 /**
  * Sleep for a specified number of milliseconds.
  */
-void	ft_usleep(size_t milliseconds)
+void	ft_usleep(size_t milliseconds, t_philo *philo)
 {
 	size_t	start;
 
 	start = get_current_time();
 	while ((get_current_time() - start) < milliseconds)
+	{
+		if (is_simulation_over(philo->program))
+			return ;
 		usleep(1);
+	}
 }
 
 /**
