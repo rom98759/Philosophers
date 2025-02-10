@@ -2,8 +2,8 @@
 # 🌟 GENERAL CONFIG & FLAGS 🌟
 # =============================================================================
 
-CC := gcc
-CFLAGS := -Wall -Wextra -Werror -pthread -g -Wunused-function
+CC := cc
+CFLAGS := -Wall -Wextra -Werror -pthread -g 
 INCLUDES := -Iincludes
 NAME := philo
 

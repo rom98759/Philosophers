@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:42 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/01/29 13:55:36 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:47:10 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	update_philo_state(t_philo *philo);
 /* Utils */
 long	ft_atol(const char *str);
 long	get_current_time(void);
-void	ft_usleep(size_t milliseconds);
+void	ft_usleep(size_t milliseconds, t_philo *philo);
 void	ft_error(void);
 
 /* Parsing */
