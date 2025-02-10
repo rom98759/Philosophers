@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:06:17 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 14:55:56 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:29:52 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	*philo_routine(void *arg)
 		if (is_simulation_over(philo->program))
 			break ;
 		print_action(philo, "is thinking");
+		ft_usleep(120, philo);
 	}
 	return (NULL);
 }
