@@ -6,12 +6,15 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:07:04 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/20 12:45:56 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:48:34 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * Check if the simulation is over.
+ */
 int	is_simulation_over(t_program *program)
 {
 	int	result;
@@ -22,6 +25,9 @@ int	is_simulation_over(t_program *program)
 	return (result);
 }
 
+/**
+ * Print an action performed by a philosopher.
+ */
 void	print_action(t_philo *philo, char *action)
 {
 	if (is_simulation_over(philo->program))
@@ -33,6 +39,9 @@ void	print_action(t_philo *philo, char *action)
 	pthread_mutex_unlock(&philo->program->write_lock);
 }
 
+/**
+ * Philosopher takes forks.
+ */
 void	take_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
@@ -49,6 +58,9 @@ void	take_forks(t_philo *philo)
 	}
 }
 
+/**
+ * Update the state of a philosopher.
+ */
 void	update_philo_state(t_philo *philo)
 {
 	print_action(philo, "is eating");

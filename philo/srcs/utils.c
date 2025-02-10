@@ -6,12 +6,15 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:04:36 by rcaillie          #+#    #+#             */
-/*   Updated: 2024/12/20 12:39:21 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:48:37 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * Convert a string to a long integer.
+ */
 long	ft_atol(const char *str)
 {
 	long	res;
@@ -37,6 +40,9 @@ long	ft_atol(const char *str)
 	return (res * sign);
 }
 
+/**
+ * Get the current time in milliseconds.
+ */
 long	get_current_time(void)
 {
 	struct timeval	time;
@@ -49,6 +55,9 @@ long	get_current_time(void)
 	return ((time.tv_usec / 1000) + (time.tv_sec * 1000));
 }
 
+/**
+ * Sleep for a specified number of milliseconds.
+ */
 void	ft_usleep(size_t milliseconds)
 {
 	size_t	start;
@@ -58,6 +67,9 @@ void	ft_usleep(size_t milliseconds)
 		usleep(1);
 }
 
+/**
+ * Print an error message to standard error.
+ */
 void	ft_error(void)
 {
 	write(2, "Error\n", 6);

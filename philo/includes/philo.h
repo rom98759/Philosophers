@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:38:42 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/01/28 14:05:00 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:55:36 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,6 @@ typedef struct s_program
 	t_philo			*philos;
 	unsigned long	start_time;
 }					t_program;
-
-/* Philosophers */
-void	end_simulation(t_program *program);
 
 /* Threads utils */
 int		is_simulation_over(t_program *program);

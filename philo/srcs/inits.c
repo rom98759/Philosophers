@@ -6,12 +6,15 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:58:57 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/01/28 14:04:55 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:45:40 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * Initialize philosopher structures.
+ */
 static void	init_philo(t_program *program)
 {
 	int	i;
@@ -29,6 +32,9 @@ static void	init_philo(t_program *program)
 	}
 }
 
+/**
+ * Parse command-line arguments.
+ */
 static int	parse_arguments(t_program *program, int ac, char **av)
 {
 	program->nb_philos = ft_atol(av[1]);
@@ -44,6 +50,9 @@ static int	parse_arguments(t_program *program, int ac, char **av)
 	return (0);
 }
 
+/**
+ * Allocate resources for forks and philosophers.
+ */
 static int	allocate_resources(t_program *program)
 {
 	program->forks = malloc(sizeof(pthread_mutex_t) * program->nb_philos);
@@ -62,12 +71,20 @@ static int	allocate_resources(t_program *program)
 	return (0);
 }
 
+/**
+ * Initialize mutexes for forks and program locks.
+ */
 static int	init_mutexes(t_program *program)
 {
 	int	i;
 
-	pthread_mutex_init(&program->write_lock, NULL);
-	pthread_mutex_init(&program->dead_lock, NULL);
+	if (pthread_mutex_init(&program->write_lock, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&program->dead_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&program->write_lock);
+		return (1);
+	}
 	i = -1;
 	while (++i < program->nb_philos)
 	{
@@ -83,6 +100,10 @@ static int	init_mutexes(t_program *program)
 	return (0);
 }
 
+/**
+ * Initialize the program by parsing arguments, allocating resources,
+ * initializing mutexes, and setting up philosophers.
+ */
 int	init_program(t_program *program, int ac, char **av)
 {
 	if (parse_arguments(program, ac, av) || allocate_resources(program))

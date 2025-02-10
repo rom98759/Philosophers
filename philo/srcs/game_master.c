@@ -6,12 +6,15 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:05:10 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/01/07 12:52:12 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:48:23 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * Check if a philosopher has died.
+ */
 static int	check_philo_death(t_program *program, int i)
 {
 	size_t	current_time;
@@ -33,6 +36,9 @@ static int	check_philo_death(t_program *program, int i)
 	return (0);
 }
 
+/**
+ * Check if all philosophers have eaten the maximum number of meals.
+ */
 static int	check_all_philos_full(t_program *program)
 {
 	int	i;
@@ -52,6 +58,9 @@ static int	check_all_philos_full(t_program *program)
 	return (all_ate);
 }
 
+/**
+ * Routine for the master thread to monitor the simulation.
+ */
 void	*game_master(void *arg)
 {
 	t_program	*program;
