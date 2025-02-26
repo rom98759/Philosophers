@@ -6,7 +6,7 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:07:04 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/26 10:52:31 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/26 12:13:24 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,14 @@ void	update_philo_state(t_philo *philo)
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->program->write_lock);
 	ft_usleep(philo->program->time_to_eat, philo);
-	pthread_mutex_unlock(philo->l_fork);
-	pthread_mutex_unlock(philo->r_fork);
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_unlock(philo->r_fork);
+		pthread_mutex_unlock(philo->l_fork);
+	}
+	else
+	{
+		pthread_mutex_unlock(philo->l_fork);
+		pthread_mutex_unlock(philo->r_fork);
+	}
 }
