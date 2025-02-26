@@ -6,14 +6,14 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 13:52:20 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 10:48:22 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/26 10:54:44 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
- * Check if a number is valid (greater than 0 and less than or equal to INT_MAX).
+ * Check if a number is valid
  */
 static int	is_valid(long n)
 {
@@ -23,7 +23,7 @@ static int	is_valid(long n)
 }
 
 /**
- * Check if a string contains only digits.
+ * Check if a string contains only digits
  */
 static int	is_digit(const char *s)
 {
@@ -42,7 +42,7 @@ static int	is_digit(const char *s)
 }
 
 /**
- * Check if a command-line argument is valid.
+ * Check if a command-line argument is valid
  */
 static int	check_arg(const char *s)
 {
@@ -57,7 +57,7 @@ static int	check_arg(const char *s)
 }
 
 /**
- * Parse and validate command-line arguments.
+ * Parse and validate command-line arguments
  */
 int	ft_parsing(int ac, char **av)
 {

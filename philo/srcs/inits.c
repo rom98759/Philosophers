@@ -6,14 +6,14 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:58:57 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 10:45:40 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/26 10:56:06 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
- * Initialize philosopher structures.
+ * Initialize philosopher structures
  */
 static void	init_philo(t_program *program)
 {
@@ -33,7 +33,7 @@ static void	init_philo(t_program *program)
 }
 
 /**
- * Parse command-line arguments.
+ * Parse command line arguments
  */
 static int	parse_arguments(t_program *program, int ac, char **av)
 {
@@ -51,7 +51,7 @@ static int	parse_arguments(t_program *program, int ac, char **av)
 }
 
 /**
- * Allocate resources for forks and philosophers.
+ * Allocate resources forks + philosophers
  */
 static int	allocate_resources(t_program *program)
 {
@@ -72,7 +72,7 @@ static int	allocate_resources(t_program *program)
 }
 
 /**
- * Initialize mutexes for forks and program locks.
+ * Initialize mutexes forks + program locks
  */
 static int	init_mutexes(t_program *program)
 {
@@ -101,8 +101,8 @@ static int	init_mutexes(t_program *program)
 }
 
 /**
- * Initialize the program by parsing arguments, allocating resources,
- * initializing mutexes, and setting up philosophers.
+ * Initialize program parsing arguments + allocating resources
+ * mutexes + setting up philosophers.
  */
 int	init_program(t_program *program, int ac, char **av)
 {

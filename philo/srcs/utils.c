@@ -6,14 +6,14 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 14:04:36 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 14:18:18 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/26 10:57:03 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
- * Convert a string to a long integer.
+ * Convert a string to a long integer
  */
 long	ft_atol(const char *str)
 {
@@ -41,7 +41,7 @@ long	ft_atol(const char *str)
 }
 
 /**
- * Get the current time in milliseconds.
+ * Get the current time in milliseconds
  */
 long	get_current_time(void)
 {
@@ -56,7 +56,7 @@ long	get_current_time(void)
 }
 
 /**
- * Sleep for a specified number of milliseconds.
+ * Sleep for a specified number of milliseconds
  */
 void	ft_usleep(size_t milliseconds, t_philo *philo)
 {
@@ -72,7 +72,7 @@ void	ft_usleep(size_t milliseconds, t_philo *philo)
 }
 
 /**
- * Print an error message to standard error.
+ * Print an error message to standard error
  */
 void	ft_error(void)
 {

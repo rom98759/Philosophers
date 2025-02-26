@@ -6,14 +6,14 @@
 /*   By: rcaillie <rcaillie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:06:17 by rcaillie          #+#    #+#             */
-/*   Updated: 2025/02/10 16:29:52 by rcaillie         ###   ########.fr       */
+/*   Updated: 2025/02/26 10:56:39 by rcaillie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
- * Handle the case where there is only one philosopher.
+ * Handle the case where there is only one philosopher
  */
 static void	handle_single_philo(t_philo *philo)
 {
@@ -22,7 +22,7 @@ static void	handle_single_philo(t_philo *philo)
 }
 
 /**
- * Routine for each philosopher thread.
+ * Routine for each philosopher thread
  */
 void	*philo_routine(void *arg)
 {
