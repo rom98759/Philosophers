@@ -11,6 +11,51 @@ Le projet *Philosophers* de l'école 42 est une simulation du problème classiqu
 - Gérer la synchronisation des threads pour prévenir les interblocages (deadlocks) et les famines.
 - Respecter les contraintes du sujet, telles que le bon fonctionnement du programme avec différentes configurations de philosophes et de temps.
 
+## Simulateur Visualiser
+
+🌟 **Tu peux tester visuellement le problème des philosophes avec ce simulateur interactif !** 🧑‍💻🍴<br>
+👉 [**Philosophers Visualizer**](https://rom98759.github.io/Philosophers-visualizer/) 👈 <br>
+💡 **Super outil pour comprendre et expérimenter !** 🚀
+
+```bash
+➜  philo git:(main) ./philo 5 8 1 1 1
+0 1 has taken left fork
+0 1 has taken right fork
+0 1 is eating
+0 3 has taken left fork
+0 3 has taken right fork
+0 3 is eating
+1 3 is sleeping
+1 2 has taken right fork
+1 2 has taken left fork
+1 2 is eating
+1 1 is sleeping
+2 1 is thinking
+2 1 has taken left fork
+2 1 has taken right fork
+2 1 is eating
+2 3 is thinking
+2 3 has taken left fork
+2 2 is sleeping
+2 3 has taken right fork
+2 3 is eating
+3 2 is thinking
+3 3 is sleeping
+3 2 has taken right fork
+3 2 has taken left fork
+3 2 is eating
+3 5 has taken left fork
+3 5 has taken right fork
+3 5 is eating
+3 1 is sleeping
+3 4 has taken right fork
+4 5 is sleeping
+4 3 is thinking
+4 4 has taken left fork
+4 4 is eating
+All philosophers have eaten the maximum number of meals
+```
+
 ---
 
 ## Contexte et Explication
